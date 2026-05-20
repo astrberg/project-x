@@ -1,4 +1,4 @@
-google-cloud-firestore>=2.14.0
+google-cloud-firestore>=2.27.0
 google-genai>=2.0.1
 requests>=2.33.1
 google-api-python-client>=2.196.0
