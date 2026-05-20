@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-x"
+version = "0.1.0"
+description = "Project X"
+requires-python = ">=3.12"
+dependencies = [
+    "functions-framework>=3.5.0",
+    "google-api-python-client>=2.196.0",
+    "google-auth>=2.53.0",
+    "google-cloud-firestore>=2.14.0",
+    "google-genai>=2.5.0",
+    "requests>=2.34.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.15.13",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.hatch.build.targets.wheel]
+packages = ["functions"]
