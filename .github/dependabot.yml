@@ -10,6 +10,7 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "pip"
-    directory: "/"
+    directories:
+      - "/functions/*"
     schedule:
       interval: "weekly"
