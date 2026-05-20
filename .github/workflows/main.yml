@@ -1,0 +1,122 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  plan:
+    name: Terraform Plan
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.3"
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -no-color
+        working-directory: terraform
+        env:
+          TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
+          TF_VAR_region: ${{ vars.REGION }}
+          TF_VAR_environment: ${{ vars.ENVIRONMENT }}
+          TF_VAR_sms_api_url: ${{ secrets.SMS_API_URL }}
+          TF_VAR_sheet_gid: ${{ secrets.SHEET_GID }}
+
+      - name: Show Terraform Plan
+        run: terraform show -no-color tfplan
+        working-directory: terraform
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: terraform/tfplan
+          retention-days: 5
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 5
+
+  deploy:
+    name: Terraform Apply
+    runs-on: ubuntu-slim
+    needs: plan
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download dist folder
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.3"
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform
+        env:
+          TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
+          TF_VAR_region: ${{ vars.REGION }}
+          TF_VAR_environment: ${{ vars.ENVIRONMENT }}
+          TF_VAR_sms_api_url: ${{ secrets.SMS_API_URL }}
+          TF_VAR_sheet_gid: ${{ secrets.SHEET_GID }}
