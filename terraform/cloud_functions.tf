@@ -19,16 +19,16 @@ resource "google_storage_bucket_object" "function_receive_incoming_sms_zip" {
   depends_on = [google_storage_bucket.functions_source]
 }
 
-data "archive_file" "function_process_incoming_sms_zip" {
+data "archive_file" "function_brain_dump_idea_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../functions/process_incoming_sms"
-  output_path = "${path.module}/../dist/process_incoming_sms"
+  source_dir  = "${path.module}/../functions/brain_dump_idea"
+  output_path = "${path.module}/../dist/brain_dump_idea"
 }
 
 resource "google_storage_bucket_object" "function_process_incoming_zip" {
-  name   = "process-${data.archive_file.function_process_incoming_sms_zip.output_md5}.zip"
+  name   = "process-${data.archive_file.function_brain_dump_idea_zip.output_md5}.zip"
   bucket = google_storage_bucket.functions_source.name
-  source = data.archive_file.function_process_incoming_sms_zip.output_path
+  source = data.archive_file.function_brain_dump_idea_zip.output_path
 
   depends_on = [google_storage_bucket.functions_source]
 }
@@ -77,15 +77,15 @@ resource "google_cloudfunctions2_function" "receive_incoming_sms" {
   ]
 }
 
-resource "google_cloudfunctions2_function" "process_incoming_sms" {
+resource "google_cloudfunctions2_function" "brain_dump_idea" {
   project  = var.project_id
-  name     = "process_incoming_sms"
+  name     = "brain_dump_idea"
   location = "europe-west1" # change when available
 
   description = "Process incoming SMS"
   build_config {
     runtime     = "python312"
-    entry_point = "process_incoming_sms"
+    entry_point = "brain_dump_idea"
     source {
       storage_source {
         bucket = google_storage_bucket.functions_source.name
@@ -171,9 +171,9 @@ resource "google_cloud_run_service_iam_member" "unauthenticated_invoker" {
 }
 
 resource "google_cloud_run_service_iam_member" "process_invoker" {
-  project  = google_cloudfunctions2_function.process_incoming_sms.project
-  location = google_cloudfunctions2_function.process_incoming_sms.location
-  service  = google_cloudfunctions2_function.process_incoming_sms.service_config[0].service
+  project  = google_cloudfunctions2_function.brain_dump_idea.project
+  location = google_cloudfunctions2_function.brain_dump_idea.location
+  service  = google_cloudfunctions2_function.brain_dump_idea.service_config[0].service
 
   role   = "roles/run.invoker"
   member = "serviceAccount:${google_service_account.function_account.email}"

@@ -9,13 +9,13 @@ output "receive_incoming_sms_url" {
   sensitive   = true
 }
 
-output "process_incoming_sms_name" {
-  value       = google_cloudfunctions2_function.process_incoming_sms.name
+output "brain_dump_idea_name" {
+  value       = google_cloudfunctions2_function.brain_dump_idea.name
   description = "Name of the process Cloud Function"
 }
 
-output "process_incoming_sms_url" {
-  value       = google_cloudfunctions2_function.process_incoming_sms.service_config[0].uri
+output "brain_dump_idea_url" {
+  value       = google_cloudfunctions2_function.brain_dump_idea.service_config[0].uri
   description = "Trigger URL for the processing Cloud Function"
   sensitive   = true
 }

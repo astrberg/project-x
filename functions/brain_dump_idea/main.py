@@ -55,8 +55,8 @@ SHEET_GID = os.environ.get("SHEET_GID")
 
 
 @functions_framework.cloud_event
-def process_incoming_sms(cloud_event: CloudEvent):
-    """Eventarc Cloud Function for processing incoming SMS webhooks."""
+def brain_dump_idea(cloud_event: CloudEvent):
+    """Cloud Function for brain dumping idea into Google Sheet in combination with Gemini"""
     subject = cloud_event.get("subject")
 
     if not subject:
