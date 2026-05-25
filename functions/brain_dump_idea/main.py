@@ -141,7 +141,12 @@ def brain_dump_idea(cloud_event: CloudEvent):
             # STEP A: Insert a blank row at Row 2 (index 1) to push data down[cite: 1]
             {
                 "insertDimension": {
-                    "range": {"sheetId": SHEET_GID, "dimension": "ROWS", "startIndex": 1, "endIndex": 2},
+                    "range": {
+                        "sheetId": SHEET_GID,
+                        "dimension": "ROWS",
+                        "startIndex": 1,
+                        "endIndex": 2,
+                    },
                     "inheritFromBefore": False,
                 }
             },

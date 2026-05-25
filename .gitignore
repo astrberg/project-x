@@ -232,3 +232,5 @@ terraform.rc
 .gcloud/
 google-cloud-key.json
 
+# Antigravity cli
+.antigravitycli

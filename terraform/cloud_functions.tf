@@ -33,6 +33,20 @@ resource "google_storage_bucket_object" "function_process_incoming_zip" {
   depends_on = [google_storage_bucket.functions_source]
 }
 
+data "archive_file" "function_brain_dump_todo_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../functions/brain_dump_todo"
+  output_path = "${path.module}/../dist/brain_dump_todo"
+}
+
+resource "google_storage_bucket_object" "function_brain_dump_todo_zip" {
+  name   = "brain-dump-todo-${data.archive_file.function_brain_dump_todo_zip.output_md5}.zip"
+  bucket = google_storage_bucket.functions_source.name
+  source = data.archive_file.function_brain_dump_todo_zip.output_path
+
+  depends_on = [google_storage_bucket.functions_source]
+}
+
 resource "google_service_account" "cloud_build_service_account" {
   project      = var.project_id
   account_id   = "cloud-build-sa"
@@ -159,6 +173,99 @@ resource "google_cloudfunctions2_function" "brain_dump_idea" {
     google_storage_bucket_object.function_process_incoming_zip,
   ]
 
+}
+
+resource "google_cloudfunctions2_function" "brain_dump_todo" {
+  project  = var.project_id
+  name     = "brain-dump-todo"
+  location = "europe-west1"
+
+  description = "Process incoming todo items"
+  build_config {
+    runtime     = "python312"
+    entry_point = "brain_dump_todo"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.functions_source.name
+        object = google_storage_bucket_object.function_brain_dump_todo_zip.name
+      }
+    }
+    service_account = "projects/${var.project_id}/serviceAccounts/${google_service_account.cloud_build_service_account.email}"
+  }
+
+  service_config {
+    max_instance_count    = 1
+    available_memory      = "256M"
+    timeout_seconds       = 60
+    service_account_email = google_service_account.function_account.email
+
+    secret_environment_variables {
+      key        = "SMS_API_USERNAME"
+      secret     = google_secret_manager_secret.sms_api_username.secret_id
+      version    = "latest"
+      project_id = var.project_id
+    }
+
+    secret_environment_variables {
+      key        = "SMS_API_PASSWORD"
+      secret     = google_secret_manager_secret.sms_api_password.secret_id
+      version    = "latest"
+      project_id = var.project_id
+    }
+
+    secret_environment_variables {
+      key        = "JIRA_EMAIL"
+      secret     = google_secret_manager_secret.jira_email.secret_id
+      version    = "latest"
+      project_id = var.project_id
+    }
+
+    secret_environment_variables {
+      key        = "JIRA_API_TOKEN"
+      secret     = google_secret_manager_secret.jira_api_token.secret_id
+      version    = "latest"
+      project_id = var.project_id
+    }
+
+    environment_variables = {
+      SMS_API_URL      = var.sms_api_url
+      JIRA_URL         = var.jira_url
+      JIRA_PROJECT_KEY = var.jira_project_key
+    }
+  }
+
+  event_trigger {
+    trigger_region = var.region
+    event_type     = "google.cloud.firestore.document.v1.created"
+    retry_policy   = "RETRY_POLICY_DO_NOT_RETRY"
+
+    service_account_email = google_service_account.function_account.email
+
+    event_filters {
+      attribute = "database"
+      value     = "main"
+    }
+
+    event_filters {
+      attribute = "document"
+      value     = "incoming_todo/{docId}"
+      operator  = "match-path-pattern"
+    }
+  }
+
+  depends_on = [
+    google_storage_bucket.functions_source,
+    google_storage_bucket_object.function_brain_dump_todo_zip,
+  ]
+}
+
+resource "google_cloud_run_service_iam_member" "brain_dump_todo_invoker" {
+  project  = google_cloudfunctions2_function.brain_dump_todo.project
+  location = google_cloudfunctions2_function.brain_dump_todo.location
+  service  = google_cloudfunctions2_function.brain_dump_todo.service_config[0].service
+
+  role   = "roles/run.invoker"
+  member = "serviceAccount:${google_service_account.function_account.email}"
 }
 
 resource "google_cloud_run_service_iam_member" "unauthenticated_invoker" {

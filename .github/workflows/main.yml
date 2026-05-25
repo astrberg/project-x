@@ -46,6 +46,8 @@ jobs:
           TF_VAR_environment: ${{ vars.ENVIRONMENT }}
           TF_VAR_sms_api_url: ${{ secrets.SMS_API_URL }}
           TF_VAR_sheet_gid: ${{ secrets.SHEET_GID }}
+          TF_VAR_jira_url: ${{ vars.JIRA_URL }}
+          TF_VAR_jira_project_key: ${{ vars.JIRA_PROJECT_KEY }}
 
       - name: Show Terraform Plan
         run: terraform show -no-color tfplan
@@ -118,3 +120,5 @@ jobs:
           TF_VAR_environment: ${{ vars.ENVIRONMENT }}
           TF_VAR_sms_api_url: ${{ secrets.SMS_API_URL }}
           TF_VAR_sheet_gid: ${{ secrets.SHEET_GID }}
+          TF_VAR_jira_url: ${{ vars.JIRA_URL }}
+          TF_VAR_jira_project_key: ${{ vars.JIRA_PROJECT_KEY }}

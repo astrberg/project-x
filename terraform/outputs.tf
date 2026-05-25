@@ -20,6 +20,17 @@ output "brain_dump_idea_url" {
   sensitive   = true
 }
 
+output "brain_dump_todo_name" {
+  value       = google_cloudfunctions2_function.brain_dump_todo.name
+  description = "Name of the brain dump todo Cloud Function"
+}
+
+output "brain_dump_todo_url" {
+  value       = google_cloudfunctions2_function.brain_dump_todo.service_config[0].uri
+  description = "Trigger URL for the brain dump todo Cloud Function"
+  sensitive   = true
+}
+
 output "firestore_database" {
   value       = google_firestore_database.database.name
   description = "Firestore database name"

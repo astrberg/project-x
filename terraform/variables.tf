@@ -36,3 +36,13 @@ variable "github_repo_name" {
   description = "GitHub repository name"
   default     = "project-x"
 }
+
+variable "jira_url" {
+  type        = string
+  description = "Jira Cloud base URL"
+}
+
+variable "jira_project_key" {
+  type        = string
+  description = "Jira Project Key"
+}

@@ -47,7 +47,9 @@ def receive_incoming_sms(request):
                 "sms_id": sms_payload.get("id"),
             }
         )
-        sms_collection = DB.collection("incoming_sms")
+        is_todo = str(sms_payload.get("message", "")).strip().lower().startswith("todo:")
+        collection_name = "incoming_todo" if is_todo else "incoming_sms"
+        sms_collection = DB.collection(collection_name)
         sms_document = (
             sms_collection.document(sms_payload.get("id"))
             if sms_payload.get("id")
@@ -57,7 +59,7 @@ def receive_incoming_sms(request):
         logger.info(
             {
                 "message": "Stored incoming SMS in main",
-                "collection": "incoming_sms",
+                "collection": collection_name,
                 "document_id": sms_document.id,
             }
         )

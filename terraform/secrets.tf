@@ -113,3 +113,49 @@ resource "google_secret_manager_secret_iam_member" "secret_access_sheet_id" {
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.function_account.email}"
 }
+
+resource "google_secret_manager_secret" "jira_email" {
+  secret_id = "jira-email"
+
+  replication {
+    user_managed {
+      replicas {
+        location = var.region
+      }
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_secret_manager_secret" "jira_api_token" {
+  secret_id = "jira-api-token"
+
+  replication {
+    user_managed {
+      replicas {
+        location = var.region
+      }
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_secret_manager_secret_iam_member" "secret_access_jira_email" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.jira_email.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.function_account.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "secret_access_jira_api_token" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.jira_api_token.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.function_account.email}"
+}
