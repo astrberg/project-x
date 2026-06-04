@@ -9,7 +9,7 @@ description = "Project X"
 requires-python = ">=3.12"
 dependencies = [
     "functions-framework>=3.5.0",
-    "google-api-python-client>=2.196.0",
+    "google-api-python-client>=2.197.0",
     "google-auth>=2.53.0",
     "google-cloud-firestore>=2.14.0",
     "google-genai>=2.5.0",
