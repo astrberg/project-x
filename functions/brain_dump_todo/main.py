@@ -3,8 +3,12 @@ import os
 
 import functions_framework
 from cloudevents.http import CloudEvent
+import google.cloud.logging
 from google.cloud import firestore
 import requests
+
+logging_client = google.cloud.logging.Client()
+logging_client.setup_logging()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

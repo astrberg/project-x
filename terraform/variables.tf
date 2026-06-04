@@ -46,3 +46,8 @@ variable "jira_project_key" {
   type        = string
   description = "Jira Project Key"
 }
+
+variable "alert_email" {
+  type        = string
+  description = "Email address for monitoring alerts"
+}

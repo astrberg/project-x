@@ -1,10 +1,14 @@
 import logging
-import secrets
 import os
+import secrets
 from flask import abort
 
 import functions_framework
+import google.cloud.logging
 from google.cloud import firestore
+
+logging_client = google.cloud.logging.Client()
+logging_client.setup_logging()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
