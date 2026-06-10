@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Project X"
 requires-python = ">=3.12"
 dependencies = [
-    "functions-framework>=3.5.0",
+    "functions-framework>=3.10.1",
     "google-api-python-client>=2.197.0",
     "google-auth>=2.53.0",
     "google-cloud-firestore>=2.14.0",

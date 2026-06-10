@@ -388,19 +388,22 @@ wheels = [
 
 [[package]]
 name = "functions-framework"
-version = "3.8.3"
+version = "3.10.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "cloudevents" },
     { name = "flask" },
     { name = "gunicorn", marker = "sys_platform != 'win32'" },
+    { name = "starlette" },
+    { name = "uvicorn" },
+    { name = "uvicorn-worker" },
     { name = "watchdog" },
     { name = "werkzeug" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/93/1f/367a737a58b53f22113e7f443598a3907d67a5ddf1c45f9d35a6ba642bb0/functions_framework-3.8.3.tar.gz", hash = "sha256:95827698469e3979518d52e32def2f11230465877fef32afd49045013b2a469c", size = 43640, upload-time = "2025-05-16T18:27:34.645Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/4e/63875081ead5db522d33d05fcc5bafad73944da841755ef8a1dc5d872b80/functions_framework-3.10.1.tar.gz", hash = "sha256:e60174022fc1b293dd0a33f1c6894dabd44852c0d440a51e7defd198e8d05ca5", size = 54148, upload-time = "2026-02-17T20:39:43.308Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/52/b0b1fe1b964a9afe6b7da41c88434f09c16bf915cd48b9185e839f96fa6c/functions_framework-3.8.3-py3-none-any.whl", hash = "sha256:fd352272c02ee08b4a3445e234213e43fbdd350365d98e2cce13e1575490bffe", size = 36051, upload-time = "2025-05-16T18:27:33.037Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/0e/f2cbbd4eb81646b3e09093b4df903c4df60c4791f2a4c6d41e5f3a56b491/functions_framework-3.10.1-py3-none-any.whl", hash = "sha256:48e7fd752d32dfeb528d1c9bf5d95960b6f0bb392f2a4da689f4d3c7a82c1230", size = 41406, upload-time = "2026-02-17T20:39:41.455Z" },
 ]
 
 [[package]]
@@ -910,7 +913,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "functions-framework", specifier = ">=3.5.0" },
+    { name = "functions-framework", specifier = ">=3.10.1" },
     { name = "google-api-python-client", specifier = ">=2.197.0" },
     { name = "google-auth", specifier = ">=2.53.0" },
     { name = "google-cloud-firestore", specifier = ">=2.14.0" },
@@ -1167,6 +1170,19 @@ wheels = [
 ]
 
 [[package]]
+name = "starlette"
+version = "0.52.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c4/68/79977123bb7be889ad680d79a40f339082c1978b5cfcf62c2d8d196873ac/starlette-0.52.1.tar.gz", hash = "sha256:834edd1b0a23167694292e94f597773bc3f89f362be6effee198165a35d62933", size = 2653702, upload-time = "2026-01-18T13:34:11.062Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/81/0d/13d1d239a25cbfb19e740db83143e95c772a1fe10202dda4b76792b114dd/starlette-0.52.1-py3-none-any.whl", hash = "sha256:0029d43eb3d273bc4f83a08720b4912ea4b071087a3b48db01b7c839f7954d74", size = 74272, upload-time = "2026-01-18T13:34:09.188Z" },
+]
+
+[[package]]
 name = "tenacity"
 version = "9.1.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1212,6 +1228,32 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e5ee11424ef85419ba0d8ba0b3138bf360be2ff56953/urllib3-2.7.0.tar.gz", hash = "sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c", size = 433602, upload-time = "2026-05-07T16:13:18.596Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl", hash = "sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897", size = 131087, upload-time = "2026-05-07T16:13:17.151Z" },
+]
+
+[[package]]
+name = "uvicorn"
+version = "0.49.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "h11" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c4/1f/fa18009dea8469069cca78a4e877a008ab78f08b064bfc9ab891579077ff/uvicorn-0.49.0.tar.gz", hash = "sha256:ebf4271aa580d9de97f93192d4595176df6e91f9aae919ca73e4fc07df1e66a3", size = 91284, upload-time = "2026-06-03T22:01:30.448Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/88/fa/e1388bbcf24ef3274f45c0c1c7b501fd14971037c1b6ee23610553307497/uvicorn-0.49.0-py3-none-any.whl", hash = "sha256:ba3d14c3ee7e41c6c654c46c9eb489d33213cdd30aa1696eab1374337c13f68f", size = 71376, upload-time = "2026-06-03T22:01:29.037Z" },
+]
+
+[[package]]
+name = "uvicorn-worker"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "gunicorn" },
+    { name = "uvicorn" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/80/59/9101b9c0680fd80e9d26c07deb822a5d18a324339fcf9cd017885ee808ad/uvicorn_worker-0.4.0.tar.gz", hash = "sha256:8ee5306070d8f38dce124adce488c3c0b50f20cf0c0222b12c66188da7214493", size = 9361, upload-time = "2025-09-20T10:47:01.218Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/90/25/09cd7a90c8bb7fb693be0d6704fccd5f9778d5513214b7a01cc4a94ff314/uvicorn_worker-0.4.0-py3-none-any.whl", hash = "sha256:e2ed952cef976f5e9e429d7269640bbcafbd36c80aa80f1003c8c77a6797abde", size = 5364, upload-time = "2025-09-20T10:46:59.776Z" },
 ]
 
 [[package]]
